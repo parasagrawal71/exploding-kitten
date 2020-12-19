@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Home.scss";
 import Header from "../../components/header/Header";
+import request from "../../apis/request";
 
 import defuseIcon from "../../assets/img/defuse.png";
 import explodeIcon from "../../assets/img/explode.png";
@@ -17,8 +18,14 @@ const Home = () => {
   const cards = ["CAT", "DEFUSE", "SHUFFLE", "EXPLODE"];
 
   useEffect(() => {
+    getUserData();
     generateDeck();
   }, []);
+
+  const getUserData = async () => {
+    const response = await request("/users", "GET");
+    console.log("response", response);
+  };
 
   const generateDeck = () => {
     const r1 = Math.floor(Math.random() * 4);
