@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "./Home.scss";
 import Header from "../../components/header/Header";
-import request from "../../apis/request";
-import { readCookie } from "../../utils/cookie";
+import { connect } from "react-redux";
+import { getUserData } from "../../redux/actions/userActions";
 
 import defuseIcon from "../../assets/img/defuse.png";
 import explodeIcon from "../../assets/img/explode.png";
 import shuffleIcon from "../../assets/img/shuffle.png";
 import catIcon from "../../assets/img/cat.png";
 
-const Home = () => {
+const Home = (props) => {
+  // PROPS
+  const { getUserData, user } = props;
+
   // STATE VARIABLES
-  const [user, setUser] = useState({});
   const [deck, setDeck] = useState([]);
   const [defuseCards, setDefuseCards] = useState([]);
   const [openedCard, setOpenedCard] = useState("");
@@ -23,14 +25,6 @@ const Home = () => {
     getUserData();
     generateDeck();
   }, []);
-
-  const getUserData = async () => {
-    const username = readCookie("username");
-    if (username) {
-      const response = await request(`/users/${username}`, "GET");
-      setUser(response?.data);
-    }
-  };
 
   const generateDeck = () => {
     const r1 = Math.floor(Math.random() * 4);
@@ -147,4 +141,8 @@ const Home = () => {
   );
 };
 
-export default Home;
+const mapStateToProps = (store) => {
+  return { user: store?.data?.user };
+};
+
+export default connect(mapStateToProps, { getUserData })(Home);
