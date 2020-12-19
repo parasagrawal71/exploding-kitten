@@ -12,8 +12,8 @@ const RouteWrapper = ({ component: Component, isPrivate, ...rest }) => {
   }
 
   if (isPrivate && !signed) {
-    toast.error("Login with username to start the game");
-    toast.clearWaitingQueue();
+    // toast.error("Login with username to start the game");
+    // toast.clearWaitingQueue();
     return <Redirect to="/" />;
   }
 

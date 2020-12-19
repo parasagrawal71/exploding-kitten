@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Home.scss";
 import Header from "../../components/header/Header";
 import request from "../../apis/request";
+import { readCookie } from "../../utils/cookie";
 
 import defuseIcon from "../../assets/img/defuse.png";
 import explodeIcon from "../../assets/img/explode.png";
@@ -10,6 +11,7 @@ import catIcon from "../../assets/img/cat.png";
 
 const Home = () => {
   // STATE VARIABLES
+  const [user, setUser] = useState({});
   const [deck, setDeck] = useState([]);
   const [defuseCards, setDefuseCards] = useState([]);
   const [openedCard, setOpenedCard] = useState("");
@@ -23,8 +25,11 @@ const Home = () => {
   }, []);
 
   const getUserData = async () => {
-    const response = await request("/users", "GET");
-    console.log("response", response);
+    const username = readCookie("username");
+    if (username) {
+      const response = await request(`/users/${username}`, "GET");
+      setUser(response?.data);
+    }
   };
 
   const generateDeck = () => {
@@ -101,7 +106,7 @@ const Home = () => {
 
   return (
     <main className="home">
-      <Header />
+      <Header isLeaderboard />
       <section className="content">
         <section className="deck-container">
           <h3>Deck</h3>

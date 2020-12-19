@@ -2,12 +2,30 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 }
 
-.mainHeader > img {
+.mainHeader--left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.mainHeader--left > img {
   margin-right: 20px;
 }
 
-.mainHeader > h2 {
+.mainHeader--left > h2 {
   margin: 0;
+}
+
+.mainHeader--right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.mainHeader--right > div {
+  text-decoration: underline;
+  cursor: pointer;
 }

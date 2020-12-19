@@ -1,0 +1,26 @@
+.leaderboard {
+  padding: 30px 100px;
+  background-color: #f0f0f0;
+  height: 100vh;
+}
+
+.leaderboard-table {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding-top: 50px;
+}
+
+.leaderboard-table > table,
+th,
+td {
+  border: 1px solid;
+}
+
+th {
+  padding: 5px 10px;
+}
+
+td {
+  padding: 10px;
+}

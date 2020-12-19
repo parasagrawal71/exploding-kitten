@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./LandingPage.scss";
 import { setCookie } from "../../utils/cookie";
 import { toast } from "react-toastify";
+import request from "../../apis/request";
 
 import Header from "../../components/header/Header";
 import history from "../../routes/history";
@@ -9,11 +10,13 @@ import history from "../../routes/history";
 const LandingPage = () => {
   const [username, setUsername] = useState("");
 
-  const startGame = () => {
+  const startGame = async () => {
     if (!username) {
       toast.error("Enter username to start the game");
       return;
     }
+
+    await request("/users", "POST", { username });
     setCookie("username", username);
     history.push("home");
   };

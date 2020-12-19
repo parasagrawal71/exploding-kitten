@@ -4,6 +4,7 @@ import { Switch } from "react-router-dom";
 // IMPORT ALL PAGES HERE //
 import landingPage from "../pages/landingPage/LandingPage";
 import Home from "../pages/home/Home";
+import Leaderboard from "../pages/leaderboard/Leaderboard";
 
 // IMPORT OTHERS HERE //
 import Route from "./RouteWrapper";
@@ -13,6 +14,7 @@ const Routes = () => {
     <Switch>
       <Route path="/" exact component={landingPage} />
       <Route path="/home" exact component={Home} isPrivate />
+      <Route path="/leaderboard" exact component={Leaderboard} isPrivate />
       <Route component={landingPage} />
     </Switch>
   );
