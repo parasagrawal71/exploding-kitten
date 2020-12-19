@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./Home.scss";
 import Header from "../../components/header/Header";
+import Popup from "../../components/popup/Popup";
 import { connect } from "react-redux";
-import { getUserData } from "../../redux/actions/userActions";
+import { getUserData, editUserData } from "../../redux/actions/userActions";
 
 import defuseIcon from "../../assets/img/defuse.png";
 import explodeIcon from "../../assets/img/explode.png";
@@ -11,9 +12,11 @@ import catIcon from "../../assets/img/cat.png";
 
 const Home = (props) => {
   // PROPS
-  const { getUserData, user } = props;
+  const { getUserData, user, editUserData } = props;
 
   // STATE VARIABLES
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [popupData, setPopupData] = useState({});
   const [deck, setDeck] = useState([]);
   const [defuseCards, setDefuseCards] = useState([]);
   const [openedCard, setOpenedCard] = useState("");
@@ -46,36 +49,51 @@ const Home = (props) => {
       return card;
     });
 
-    setDeck(tempDeck);
+    // setDeck(tempDeck);
+    setDeck(["CAT", "CAT", "EXPLODE", "DEFUSE", "DEFUSE"]);
   };
 
   const revealCard = () => {
     const poppedCard = deck.pop();
+    setOpenedCard(poppedCard);
     if (!deck.length) {
-      alert("Game Won");
-      resetGame();
-      return;
+      editUserData({
+        username: user?.username,
+        matchesPlayed: user?.matchesPlayed + 1,
+        matchesWon: user?.matchesWon + 1,
+      });
+      return showMessageAndReset("Game Won", "OK", 0);
     }
 
-    setOpenedCard(poppedCard);
     if (poppedCard === "DEFUSE") {
-      setDefuseCards([...defuseCards, poppedCard]);
+      return setDefuseCards([...defuseCards, poppedCard]);
     }
 
     if (poppedCard === "EXPLODE") {
       if (defuseCards.length) {
         defuseCards.pop();
-        setDefuseCards([...defuseCards]);
-        return;
+        return setDefuseCards([...defuseCards]);
       }
-      alert("Game Over");
-      resetGame();
+      editUserData({
+        username: user?.username,
+        matchesPlayed: user?.matchesPlayed + 1,
+        matchesWon: user?.matchesWon,
+      });
+      return showMessageAndReset("Game Over", "OK", 500);
     }
 
     if (poppedCard === "SHUFFLE") {
-      alert("Game Shuffled");
-      resetGame();
+      showMessageAndReset("Game Shuffled", "OK", 500);
     }
+  };
+
+  const showMessageAndReset = (msg, btnText, time) => {
+    setTimeout(() => {
+      // alert(msg);
+      setPopupData({ message: msg, btnText });
+      setPopupVisible(true);
+      resetGame();
+    }, time);
   };
 
   const resetGame = () => {
@@ -101,6 +119,13 @@ const Home = (props) => {
   return (
     <main className="home">
       <Header isLeaderboard />
+      {popupVisible && (
+        <Popup
+          message={popupData?.message}
+          btnText={popupData?.btnText}
+          btnCallback={() => setPopupVisible(false)}
+        />
+      )}
       <section className="content">
         <section className="deck-container">
           <h3>Deck</h3>
@@ -145,4 +170,4 @@ const mapStateToProps = (store) => {
   return { user: store?.data?.user };
 };
 
-export default connect(mapStateToProps, { getUserData })(Home);
+export default connect(mapStateToProps, { getUserData, editUserData })(Home);

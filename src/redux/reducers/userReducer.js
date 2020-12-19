@@ -1,4 +1,4 @@
-import { GET_USER, GET_LEADERBOARD } from "../actions/types";
+import { GET_USER, GET_LEADERBOARD, SAVE_WON_GAME } from "../actions/types";
 
 const INITIAL_STATE = {};
 
@@ -14,6 +14,12 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         users: action.payload,
+      };
+
+    case SAVE_WON_GAME:
+      return {
+        ...state,
+        user: action.payload,
       };
 
     default:

@@ -1,3 +1,4 @@
 // ALL USER ACTION TYPES
 export const GET_USER = "GET_USER";
 export const GET_LEADERBOARD = "GET_LEADERBOARD";
+export const SAVE_WON_GAME = "SAVE_WON_GAME";

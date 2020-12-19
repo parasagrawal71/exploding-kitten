@@ -1,4 +1,4 @@
-import { GET_USER, GET_LEADERBOARD } from "./types";
+import { GET_USER, GET_LEADERBOARD, SAVE_WON_GAME } from "./types";
 import request from "../../apis/request";
 import { readCookie } from "../../utils/cookie";
 
@@ -24,6 +24,23 @@ export const getUsers = () => async (dispatch) => {
 
   dispatch({
     type: GET_LEADERBOARD,
+    payload: response?.data,
+  });
+};
+
+export const editUserData = (reqBody) => async (dispatch) => {
+  const username = readCookie("username");
+  if (!username) {
+    dispatch({
+      type: SAVE_WON_GAME,
+      payload: {},
+    });
+  }
+
+  const response = await request(`/users/${username}`, "PUT", reqBody);
+  console.log("response", response);
+  dispatch({
+    type: SAVE_WON_GAME,
     payload: response?.data,
   });
 };
