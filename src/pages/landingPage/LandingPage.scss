@@ -1,0 +1,69 @@
+.landingPage {
+  background-color: #f0f0f0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+}
+
+.landingPage-header {
+  position: absolute;
+  top: 30px;
+  left: 100px;
+}
+
+.landingPage-form-header {
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+.landingPage-form {
+  //   background-color: #ffffff;
+  //   border-radius: 5px;
+  min-width: 250px;
+  min-height: 200px;
+  text-align: center;
+}
+
+.landingPage-form-username {
+  text-transform: capitalize;
+  margin-bottom: 30px;
+  text-align: start;
+}
+
+.landingPage-form-username > input {
+  margin-top: 15px;
+  border: none;
+  outline: none;
+  background-color: inherit;
+  border-bottom: 2px solid #888888;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.landingPage-form-startBtn {
+  cursor: pointer;
+  background-color: #5499c7;
+  outline: none;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.landingPage-form-createBtn {
+  cursor: pointer;
+  background-color: #ec7063;
+  outline: none;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.landingPage-form-footer {
+  margin-top: 15px;
+}

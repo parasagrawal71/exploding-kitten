@@ -1,0 +1,13 @@
+.mainHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.mainHeader > img {
+  margin-right: 20px;
+}
+
+.mainHeader > h2 {
+  margin: 0;
+}
