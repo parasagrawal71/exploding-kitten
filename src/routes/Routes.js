@@ -12,7 +12,7 @@ const Routes = () => {
   return (
     <Switch>
       <Route path="/" exact component={landingPage} />
-      <Route path="/home" exact component={Home} />
+      <Route path="/home" exact component={Home} isPrivate />
       <Route component={landingPage} />
     </Switch>
   );

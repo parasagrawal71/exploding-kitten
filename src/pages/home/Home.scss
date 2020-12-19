@@ -59,13 +59,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background: repeating-linear-gradient(
-    45deg,
-    #606dbc,
-    #606dbc 10px,
-    #465298 10px,
-    #465298 20px
-  );
+  background-color: #606dbc;
 }
 
 .defuseIcon {
@@ -94,13 +88,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background: repeating-linear-gradient(
-    45deg,
-    #606dbc,
-    #606dbc 10px,
-    #465298 10px,
-    #465298 20px
-  );
+  background-color: #606dbc;
 }
 
 @for $i from 1 to 6 {

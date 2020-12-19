@@ -2,14 +2,24 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
+import { readCookie } from "../utils/cookie";
 
 const RouteWrapper = ({ component: Component, isPrivate, ...rest }) => {
-  const signed = false;
+  const username = readCookie("username");
+  let signed = false;
+  if (username) {
+    signed = true;
+  }
 
   if (isPrivate && !signed) {
     toast.error("Login with username to start the game");
     toast.clearWaitingQueue();
     return <Redirect to="/" />;
+  }
+
+  const { path } = rest;
+  if (path === "/" && signed) {
+    return <Redirect to="/home" />;
   }
 
   return <Route {...rest} component={Component} />;
