@@ -24,7 +24,7 @@ export const readCookie = (cname) => {
  */
 export const setCookie = (cname, cvalue) => {
   const d = new Date();
-  d.setTime(d.getTime() + 1 * 60 * 60 * 1000);
+  d.setTime(d.getTime() + 6 * 60 * 60 * 1000);
   document.cookie = `${cname}=${encodeURIComponent(
     cvalue
   )};expires=${d.toUTCString()};path=/;`;

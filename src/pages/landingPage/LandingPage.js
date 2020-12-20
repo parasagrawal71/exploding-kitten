@@ -16,8 +16,8 @@ const LandingPage = () => {
       return;
     }
 
-    await request("/users", "POST", { username });
-    setCookie("username", username);
+    await request("/users", "POST", { username: username.toLowerCase() });
+    setCookie("username", username.toLowerCase());
     history.push("home");
   };
 

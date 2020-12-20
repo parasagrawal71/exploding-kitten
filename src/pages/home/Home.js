@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+
+// IMPORT USER-DEFINED COMPONENTS HERE
 import "./Home.scss";
 import Header from "../../components/header/Header";
 import Popup from "../../components/popup/Popup";
-import { connect } from "react-redux";
 import { getUserData, editUserData } from "../../redux/actions/userActions";
 
+// IMPORT ASSETS HERE
 import defuseIcon from "../../assets/img/defuse.png";
 import explodeIcon from "../../assets/img/explode.png";
 import shuffleIcon from "../../assets/img/shuffle.png";
@@ -24,10 +27,68 @@ const Home = (props) => {
   // VARIABLES
   const cards = ["CAT", "DEFUSE", "SHUFFLE", "EXPLODE"];
 
+  const elem = document.querySelector("#root");
+
   useEffect(() => {
     getUserData();
-    generateDeck();
   }, []);
+
+  useEffect(() => {
+    checkAndSetDeck();
+  }, [user]);
+
+  useEffect(() => {
+    const updateUserState = (e) => {
+      const { deck, defuseCards, openedCard, gameStatus } = e?.detail;
+
+      editUserData({
+        username: user?.username,
+        matchesPlayed:
+          gameStatus === "won" || gameStatus === "lost"
+            ? user?.matchesPlayed + 1
+            : user?.matchesPlayed,
+        matchesWon:
+          gameStatus === "won" ? user?.matchesWon + 1 : user?.matchesWon,
+        deck,
+        defuseCards,
+        openedCard,
+      });
+    };
+    elem.addEventListener("autoSave", updateUserState, false);
+
+    return () => {
+      elem.removeEventListener("autoSave", updateUserState);
+    };
+  }, [elem]);
+
+  const checkAndSetDeck = () => {
+    if (user?.deck.length < 5 && user?.deck.length > 0) {
+      setDeck(user?.deck);
+      setDefuseCards(new Array(user?.defuseCards).fill("DEFUSE"));
+      setOpenedCard(user?.openedCard);
+    } else if (user?.deck.length === 5) {
+      setDeck(user?.deck);
+      setDefuseCards([]);
+      setOpenedCard("");
+    } else {
+      setDeck(generateDeck());
+      setDefuseCards([]);
+      setOpenedCard("");
+    }
+  };
+
+  const createCustomEvent = (deck, defuseCards, openedCard, gameStatus) => {
+    const customEvent = new window.CustomEvent("autoSave", {
+      detail: {
+        deck,
+        defuseCards,
+        openedCard,
+        gameStatus,
+      },
+    });
+
+    elem.dispatchEvent(customEvent);
+  };
 
   const generateDeck = () => {
     const r1 = Math.floor(Math.random() * 4);
@@ -48,58 +109,50 @@ const Home = (props) => {
       }
       return card;
     });
-
-    // setDeck(tempDeck);
-    setDeck(["CAT", "CAT", "EXPLODE", "DEFUSE", "DEFUSE"]);
+    return tempDeck;
+    // return ["CAT", "CAT", "EXPLODE", "SHUFFLE", "CAT"];
   };
 
   const revealCard = () => {
     const poppedCard = deck.pop();
     setOpenedCard(poppedCard);
+    setDeck([...deck]);
+
     if (!deck.length) {
-      editUserData({
-        username: user?.username,
-        matchesPlayed: user?.matchesPlayed + 1,
-        matchesWon: user?.matchesWon + 1,
-      });
+      createCustomEvent(generateDeck(), 0, "", "won");
       return showMessageAndReset("Game Won", "OK", 0);
     }
 
     if (poppedCard === "DEFUSE") {
-      return setDefuseCards([...defuseCards, poppedCard]);
+      defuseCards.push(poppedCard);
+      setDefuseCards([...defuseCards]);
+      return createCustomEvent(deck, defuseCards.length, poppedCard, "none");
     }
 
     if (poppedCard === "EXPLODE") {
       if (defuseCards.length) {
         defuseCards.pop();
-        return setDefuseCards([...defuseCards]);
+        setDefuseCards([...defuseCards]);
+        return createCustomEvent(deck, defuseCards.length, poppedCard, "none");
       }
-      editUserData({
-        username: user?.username,
-        matchesPlayed: user?.matchesPlayed + 1,
-        matchesWon: user?.matchesWon,
-      });
+
+      createCustomEvent(generateDeck(), 0, "", "lost");
       return showMessageAndReset("Game Over", "OK", 500);
     }
 
     if (poppedCard === "SHUFFLE") {
-      showMessageAndReset("Game Shuffled", "OK", 500);
+      createCustomEvent(generateDeck(), 0, "", "none");
+      return showMessageAndReset("Game Shuffled", "OK", 500);
     }
+
+    createCustomEvent(deck, defuseCards.length, poppedCard, "none");
   };
 
   const showMessageAndReset = (msg, btnText, time) => {
     setTimeout(() => {
-      // alert(msg);
       setPopupData({ message: msg, btnText });
       setPopupVisible(true);
-      resetGame();
     }, time);
-  };
-
-  const resetGame = () => {
-    setDefuseCards([]);
-    setOpenedCard("");
-    generateDeck();
   };
 
   const selectCardSrc = () => {
