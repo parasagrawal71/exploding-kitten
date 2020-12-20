@@ -4,7 +4,7 @@ import history from "../../routes/history";
 
 import laughingKitten from "../../assets/img/laughing-kitten.png";
 
-const Header = ({ customClass, isLeaderboard, isHome }) => {
+const Header = ({ customClass, isLeaderboard, isHome, isRules }) => {
   const navigateTo = (route) => {
     history.push(route);
   };
@@ -17,6 +17,8 @@ const Header = ({ customClass, isLeaderboard, isHome }) => {
       </div>
 
       <div className="mainHeader--right">
+        {isRules && <div onClick={() => navigateTo("/rules")}>Rules</div>}
+
         {isLeaderboard && (
           <div onClick={() => navigateTo("/leaderboard")}>Leaderboard</div>
         )}

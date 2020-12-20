@@ -14,7 +14,7 @@ const Leaderboard = (props) => {
 
   return (
     <main className="leaderboard">
-      <Header isHome />
+      <Header isHome isRules />
       <section className="leaderboard-table">
         <table>
           <tbody>

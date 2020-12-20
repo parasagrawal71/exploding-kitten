@@ -39,16 +39,18 @@ const Home = (props) => {
 
   useEffect(() => {
     const updateUserState = (e) => {
-      const { deck, defuseCards, openedCard, gameStatus } = e?.detail;
+      const { deck, defuseCards, openedCard, gameStatus, userData } = e?.detail;
 
       editUserData({
-        username: user?.username,
+        username: userData?.username,
         matchesPlayed:
           gameStatus === "won" || gameStatus === "lost"
-            ? user?.matchesPlayed + 1
-            : user?.matchesPlayed,
+            ? Number(userData?.matchesPlayed) + 1
+            : userData?.matchesPlayed,
         matchesWon:
-          gameStatus === "won" ? user?.matchesWon + 1 : user?.matchesWon,
+          gameStatus === "won"
+            ? Number(userData?.matchesWon + 1)
+            : userData?.matchesWon,
         deck,
         defuseCards,
         openedCard,
@@ -77,13 +79,20 @@ const Home = (props) => {
     }
   };
 
-  const createCustomEvent = (deck, defuseCards, openedCard, gameStatus) => {
+  const createCustomEvent = (
+    deck,
+    defuseCards,
+    openedCard,
+    gameStatus,
+    userData
+  ) => {
     const customEvent = new window.CustomEvent("autoSave", {
       detail: {
         deck,
         defuseCards,
         openedCard,
         gameStatus,
+        userData,
       },
     });
 
@@ -109,8 +118,8 @@ const Home = (props) => {
       }
       return card;
     });
-    // return tempDeck;
-    return ["EXPLODE", "CAT", "DEFUSE", "DEFUSE", "CAT"];
+    return tempDeck;
+    // return ["EXPLODE", "CAT", "DEFUSE", "DEFUSE", "EXPLODE"];
   };
 
   const revealCard = () => {
@@ -121,35 +130,42 @@ const Home = (props) => {
     if (poppedCard === "DEFUSE") {
       defuseCards.push(poppedCard);
       setDefuseCards([...defuseCards]);
-      return createCustomEvent(deck, defuseCards.length, poppedCard, "none");
+      if (!deck.length) {
+        createCustomEvent(generateDeck(), 0, "", "won", user);
+        showMessageAndReset("Game Won", "Play Again", 0);
+      } else {
+        createCustomEvent(deck, defuseCards.length, poppedCard, "none", user);
+      }
     }
 
     if (poppedCard === "EXPLODE") {
+      defuseCards.pop();
+      setDefuseCards([...defuseCards]);
       if (defuseCards.length) {
-        defuseCards.pop();
-        setDefuseCards([...defuseCards]);
-        createCustomEvent(deck, defuseCards.length, poppedCard, "none");
-
         if (!deck.length) {
-          createCustomEvent(generateDeck(), 0, "", "won");
-          return showMessageAndReset("Game Won", "OK", 0);
+          createCustomEvent(generateDeck(), 0, "", "won", user);
+          showMessageAndReset("Game Won", "Play Again", 0);
+        } else {
+          createCustomEvent(deck, defuseCards.length, poppedCard, "none", user);
         }
+      } else {
+        createCustomEvent(generateDeck(), 0, "", "lost", user);
+        showMessageAndReset("Game Over", "Play Again", 500);
       }
-
-      createCustomEvent(generateDeck(), 0, "", "lost");
-      return showMessageAndReset("Game Over", "OK", 500);
     }
 
     if (poppedCard === "SHUFFLE") {
-      createCustomEvent(generateDeck(), 0, "", "none");
-      return showMessageAndReset("Game Shuffled", "OK", 500);
+      createCustomEvent(generateDeck(), 0, "", "none", user);
+      showMessageAndReset("Game Shuffled", "Continue", 500);
     }
 
-    createCustomEvent(deck, defuseCards.length, poppedCard, "none");
-
-    if (!deck.length) {
-      createCustomEvent(generateDeck(), 0, "", "won");
-      return showMessageAndReset("Game Won", "OK", 0);
+    if (poppedCard === "CAT") {
+      if (!deck.length) {
+        createCustomEvent(generateDeck(), 0, "", "won", user);
+        showMessageAndReset("Game Won", "Play Again", 0);
+      } else {
+        createCustomEvent(deck, defuseCards.length, poppedCard, "none", user);
+      }
     }
   };
 
@@ -176,7 +192,7 @@ const Home = (props) => {
 
   return (
     <main className="home">
-      <Header isLeaderboard />
+      <Header isLeaderboard isRules />
       {popupVisible && (
         <Popup
           message={popupData?.message}

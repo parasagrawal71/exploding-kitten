@@ -28,4 +28,9 @@
 .mainHeader--right > div {
   text-decoration: underline;
   cursor: pointer;
+  margin-right: 10px;
+}
+
+.mainHeader--right > div:last-child {
+  margin-right: 0;
 }
