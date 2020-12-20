@@ -48,23 +48,26 @@
 }
 
 .openedCard {
-  border: 1px solid black;
   width: 170px;
   height: 200px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background-color: #606dbc;
+  padding: 30px;
+  border: 20px solid transparent;
+  background: linear-gradient(#cedfe4, #cedfe4) content-box,
+    linear-gradient(#606dbc, #606dbc) padding-box,
+    linear-gradient(#475399, #475399) border-box;
 }
 
-.defuseIcon {
-}
-.explodeIcon {
-}
-.shuffleIcon {
-}
-.catIcon {
+.card-zeroState {
+  background: none;
+  padding: 30px;
+  border: 20px solid transparent;
+  background: linear-gradient(white, white) content-box,
+    linear-gradient(white, white) padding-box,
+    linear-gradient(#475399, #475399) border-box;
 }
 
 .defuseCards-container {
@@ -76,7 +79,7 @@
   min-width: 210px;
 }
 .defuseCard {
-  border: 1px solid black;
+  outline: 1px solid lightblue;
   width: 170px;
   height: 200px;
   position: relative;
@@ -84,7 +87,11 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background-color: #606dbc;
+  padding: 30px;
+  border: 20px solid transparent;
+  background: linear-gradient(#cedfe4, #cedfe4) content-box,
+    linear-gradient(#606dbc, #606dbc) padding-box,
+    linear-gradient(#475399, #475399) border-box;
 }
 
 @for $i from 1 to 6 {

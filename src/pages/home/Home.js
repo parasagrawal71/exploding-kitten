@@ -109,19 +109,14 @@ const Home = (props) => {
       }
       return card;
     });
-    return tempDeck;
-    // return ["CAT", "CAT", "EXPLODE", "SHUFFLE", "CAT"];
+    // return tempDeck;
+    return ["EXPLODE", "CAT", "DEFUSE", "DEFUSE", "CAT"];
   };
 
   const revealCard = () => {
     const poppedCard = deck.pop();
     setOpenedCard(poppedCard);
     setDeck([...deck]);
-
-    if (!deck.length) {
-      createCustomEvent(generateDeck(), 0, "", "won");
-      return showMessageAndReset("Game Won", "OK", 0);
-    }
 
     if (poppedCard === "DEFUSE") {
       defuseCards.push(poppedCard);
@@ -133,7 +128,12 @@ const Home = (props) => {
       if (defuseCards.length) {
         defuseCards.pop();
         setDefuseCards([...defuseCards]);
-        return createCustomEvent(deck, defuseCards.length, poppedCard, "none");
+        createCustomEvent(deck, defuseCards.length, poppedCard, "none");
+
+        if (!deck.length) {
+          createCustomEvent(generateDeck(), 0, "", "won");
+          return showMessageAndReset("Game Won", "OK", 0);
+        }
       }
 
       createCustomEvent(generateDeck(), 0, "", "lost");
@@ -146,6 +146,11 @@ const Home = (props) => {
     }
 
     createCustomEvent(deck, defuseCards.length, poppedCard, "none");
+
+    if (!deck.length) {
+      createCustomEvent(generateDeck(), 0, "", "won");
+      return showMessageAndReset("Game Won", "OK", 0);
+    }
   };
 
   const showMessageAndReset = (msg, btnText, time) => {
@@ -197,7 +202,11 @@ const Home = (props) => {
 
         <section className="openedCard-container">
           <h3>Current Card</h3>
-          <div className={`openedCard ${selectCardSrc()}`}>
+          <div
+            className={`openedCard ${selectCardSrc()} ${
+              selectCardSrc() === "" ? "card-zeroState" : ""
+            }`}
+          >
             <img src={selectCardSrc()} alt={openedCard} />
           </div>
         </section>
@@ -212,6 +221,9 @@ const Home = (props) => {
                 </div>
               );
             })}
+            {!defuseCards?.length && (
+              <div className={`openedCard ${"card-zeroState"}`}></div>
+            )}
           </div>
         </section>
       </section>
