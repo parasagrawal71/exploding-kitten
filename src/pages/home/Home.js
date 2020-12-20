@@ -128,7 +128,6 @@ const Home = (props) => {
       return card;
     });
     return tempDeck;
-    // return ["EXPLODE", "CAT", "DEFUSE", "DEFUSE", "CAT"];
   };
 
   const revealCard = () => {
