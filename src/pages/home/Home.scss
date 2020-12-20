@@ -13,6 +13,7 @@
 
 .deck-container {
   max-height: 240px;
+  min-width: 210px;
 }
 .deck {
   max-height: 240px;
@@ -50,6 +51,7 @@
 
 .openedCard-container {
   align-self: center;
+  min-width: 210px;
 }
 
 .openedCard {
