@@ -23,6 +23,8 @@ const Home = (props) => {
   const [deck, setDeck] = useState([]);
   const [defuseCards, setDefuseCards] = useState([]);
   const [openedCard, setOpenedCard] = useState("");
+  const [spinLoader, setSpinLoader] = useState(false);
+  const [spinText, setSpinText] = useState("");
 
   // VARIABLES
   const cards = ["CAT", "DEFUSE", "SHUFFLE", "EXPLODE"];
@@ -55,6 +57,11 @@ const Home = (props) => {
         defuseCards,
         openedCard,
       });
+
+      setTimeout(() => {
+        setSpinLoader(false);
+        setSpinText("");
+      }, 500);
     };
     elem.addEventListener("autoSave", updateUserState, false);
 
@@ -86,6 +93,8 @@ const Home = (props) => {
     gameStatus,
     userData
   ) => {
+    setSpinLoader(true);
+    setSpinText("Saving...");
     const customEvent = new window.CustomEvent("autoSave", {
       detail: {
         deck,
@@ -119,7 +128,7 @@ const Home = (props) => {
       return card;
     });
     return tempDeck;
-    // return ["EXPLODE", "CAT", "DEFUSE", "DEFUSE", "EXPLODE"];
+    // return ["EXPLODE", "CAT", "DEFUSE", "DEFUSE", "CAT"];
   };
 
   const revealCard = () => {
@@ -132,7 +141,7 @@ const Home = (props) => {
       setDefuseCards([...defuseCards]);
       if (!deck.length) {
         createCustomEvent(generateDeck(), 0, "", "won", user);
-        showMessageAndReset("Game Won", "Play Again", 0);
+        showMessageAndReset("You won", "Play Again", 0);
       } else {
         createCustomEvent(deck, defuseCards.length, poppedCard, "none", user);
       }
@@ -144,7 +153,7 @@ const Home = (props) => {
       if (defuseCards.length) {
         if (!deck.length) {
           createCustomEvent(generateDeck(), 0, "", "won", user);
-          showMessageAndReset("Game Won", "Play Again", 0);
+          showMessageAndReset("You won", "Play Again", 0);
         } else {
           createCustomEvent(deck, defuseCards.length, poppedCard, "none", user);
         }
@@ -162,7 +171,7 @@ const Home = (props) => {
     if (poppedCard === "CAT") {
       if (!deck.length) {
         createCustomEvent(generateDeck(), 0, "", "won", user);
-        showMessageAndReset("Game Won", "Play Again", 0);
+        showMessageAndReset("You won", "Play Again", 0);
       } else {
         createCustomEvent(deck, defuseCards.length, poppedCard, "none", user);
       }
@@ -192,7 +201,7 @@ const Home = (props) => {
 
   return (
     <main className="home">
-      <Header isLeaderboard isRules />
+      <Header isLeaderboard isRules isSpin={spinLoader} spinText={spinText} />
       {popupVisible && (
         <Popup
           message={popupData?.message}
@@ -214,6 +223,7 @@ const Home = (props) => {
               );
             })}
           </div>
+          <div className="deck-msg">Click on the deck to open a card</div>
         </section>
 
         <section className="openedCard-container">
